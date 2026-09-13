@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "gauntlet run --changed --trigger hook",
+            "timeout": 300
+          }
+        ]
+      }
+    ]
+  }
+}

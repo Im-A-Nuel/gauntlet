@@ -155,6 +155,15 @@ Not touched this checkpoint (still open, deliberately or out of scope):
 - Stryker/Vitest major-version audit mentioned in coordinator notes — not run this pass; current versions still pass all tests and produced a correct real mutation run above.
 - `dashboard/sample-runs/` already has both the baseline and strengthened artifacts bundled (I checked; this is Codex's owned directory, not modified by me).
 
+## Dependency security upgrade (demo-repo): Stryker 8 -> 10, Vitest 2 -> 5
+
+Coordinator notes flagged 14 known vulnerabilities (5 low/5 moderate/2 high/2 critical) in `demo-repo`'s transitive dev dependencies, and that the registry now offers `@stryker-mutator/core` 10 and `vitest`/`@vitest/coverage-v8` 5 (Node >=22, this environment runs Node 24.10.0). Did this on branch `deps/demo-repo-security-upgrade` since a major-version bump risks breaking the demo, and merged to `main` only after re-verifying the full loop for real:
+
+- Bumped `demo-repo/package.json`: `@stryker-mutator/core` `^8.7.1` -> `^10.0.0`, `vitest` and `@vitest/coverage-v8` `^2.1.9` -> `^5.0.0`. Left `typescript` at `^5.7.3` (not flagged as vulnerable, out of scope for this bump).
+- Fresh `npm install`: 14 vulnerabilities -> 2 moderate (a DoS in `qs`, pulled in transitively through `typed-rest-client`, itself several levels deep inside Stryker's own dependency tree, not something our config touches at runtime). `npm audit fix` doesn't resolve it non-major and the package isn't a direct dependency; left as-is — dev-only tooling, no runtime/production exposure, consistent with the existing "no undocumented deps" policy (nothing added, just versions bumped).
+- Re-ran everything for real after the bump, not just installed and assumed it worked: `npm test` (12 tests) and `npm run test:strong` (33 tests) both pass unchanged under Vitest 5. Forced a real Stryker 10 mutation run with `--base-ref d1f85d4` (since `src/` is unchanged relative to the current `main` tip after the previous commit): 47 mutants, baseline 72.3% -> strengthened 95.7%, and `gate --min-score 80` flips FAIL (`below_threshold`, exit 1) -> PASS (exit 0) on the two runs respectively. Same real loop, same shape of result, on the upgraded major versions.
+- `go build`/`go vet`/`go test ./...` (all 7 packages) still pass — the version bump is demo-repo-only, no Go-side change.
+
 ## Known limitations (stated plainly, not buried)
 
 - Bob hook firing, headless `bob run`, and Skill auto-invocation are all **unverified against a real Bob binary** — implemented to the documented spec only.

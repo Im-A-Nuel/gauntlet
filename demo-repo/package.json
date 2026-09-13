@@ -9,9 +9,9 @@
     "test:strong": "vitest run --coverage --config vitest.strong.config.ts"
   },
   "devDependencies": {
-    "@stryker-mutator/core": "^8.7.1",
-    "@vitest/coverage-v8": "^2.1.9",
+    "@stryker-mutator/core": "^10.0.0",
+    "@vitest/coverage-v8": "^5.0.0",
     "typescript": "^5.7.3",
-    "vitest": "^2.1.9"
+    "vitest": "^5.0.0"
   }
 }

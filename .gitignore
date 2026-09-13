@@ -12,3 +12,6 @@ reports/
 .DS_Store
 *.tsbuildinfo
 .vercel/
+test-results/
+playwright-report/
+artifacts/qa/

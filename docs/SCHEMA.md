@@ -110,14 +110,14 @@ that fails on the mutated code and passes on the original. Rules:
 ```json
 {
   "hooks": {
-    "agentStop": [
-      { "command": "gauntlet run --changed --trigger hook" }
+    "Stop": [
+      { "hooks": [{ "type": "command", "command": "gauntlet run --changed --trigger hook", "timeout": 240 }] }
     ]
   }
 }
 ```
 
-Exact key names are verified against Bob 2.0 docs in the hour-1 spike; the installer patches rather than overwrites the file.
+The `Stop` event and nested `hooks` array follow [IBM's lifecycle hook documentation](https://bob.ibm.com/docs/ide/configuration/lifecycle-hooks), checked during implementation. The installer patches rather than overwrites the file. Actual invocation still requires a local IBM Bob installation. Bob Shell accepts a prompt on stdin via `bob run` ([official reference](https://bob.ibm.com/docs/shell/getting-started/start-bobshell-non-interactive)).
 
 ## 6. Dashboard API
 

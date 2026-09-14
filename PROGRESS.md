@@ -24,6 +24,7 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - [x] Re-art-direct the dashboard as a cinematic verification instrument, generate the project-bound 3D mutation pressure core, and bind its score trace and annotations to recorded run evidence.
 - [x] Generate and integrate the Gauntlet app icon system: premium graphite/titanium master artwork, responsive header mark, browser/Apple metadata icons, and installable 192px/512px manifest assets.
 - [x] Refine the Gauntlet wordmark with a dedicated locally bundled variable typeface, optical spacing, and stable icon/text alignment while retaining IBM Plex for product UI and technical data.
+- [x] Upgrade the public repository presentation with the Gauntlet brand mark, an optimized production dashboard capture, and an evidence-based "How IBM Bob 2.0 is used" section for submission reviewers.
 - [x] Harden CLI artifact integrity and strengthen lock cleanup: artifact reads now validate schema/counts/scores/path safety fail-closed, and every post-lock strengthen failure releases `.gauntlet/.lock` before its exit code is emitted.
 
 ## Open constraints
@@ -50,6 +51,7 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - CLI hardening: `go test ./...`, `go vet ./...`, and a standalone `go build ./cmd/gauntlet` pass after strict artifact validation and strengthen lock-release regression coverage. Dashboard typecheck and artifact tests remain green against the unchanged shared contract.
 - App-icon integration: Next.js type generation/typecheck, four artifact tests, production build, and both Playwright suites pass. The build exposes `/icon.png`, `/apple-icon.png`, and `/manifest.webmanifest`; automated desktop/mobile QA also confirms the branded header mark, metadata links, no page errors, no horizontal overflow, and no axe WCAG A/AA violations.
 - Wordmark refinement: the local Manrope Variable face loads as the computed brand font in Playwright, while typecheck, four artifact tests, production build, both end-to-end suites, responsive overflow checks, and axe WCAG A/AA remain green.
+- Repository presentation: a production-mode dashboard capture was reviewed without development chrome, cropped to the product's primary evidence view, compressed from 598 KB PNG to 80 KB WebP, and every README image/document path resolves locally. The Bob section distinguishes strengthen verification and score reporting from the separate policy gate.
 
 ## Next checkpoint
 

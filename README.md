@@ -1,8 +1,16 @@
-# Gauntlet
+<p align="center">
+  <img src="dashboard/public/brand/gauntlet-app-icon-192.png" width="96" height="96" alt="Gauntlet app icon">
+</p>
 
-Test the tests guarding AI-written code.
+<h1 align="center">Gauntlet</h1>
+
+<p align="center"><strong>Test the tests guarding AI-written code.</strong></p>
 
 Gauntlet runs StrykerJS mutations against changed TypeScript/JavaScript files, records which changes the tests detect, and presents a Trust Score beside measured line coverage. Surviving mutations become a handoff for IBM Bob to strengthen tests. A CLI gate checks the resulting evidence against a threshold.
+
+<p align="center">
+  <img src="docs/assets/dashboard-overview.webp" alt="Gauntlet dashboard showing a 97.9 percent Trust Score, mutation pressure core, merge policy, and per-file evidence">
+</p>
 
 ## Reproduce the demo
 
@@ -48,9 +56,15 @@ Raw killed, timeout and survived counts are disjoint. Trust Score is `(killed + 
 
 Line coverage comes from a measured coverage report or is displayed as unavailable. It is never inferred from the mutation score.
 
-## IBM Bob integration
+## How IBM Bob 2.0 is used
 
-Gauntlet uses the documented `Stop` lifecycle hook, a `strengthen-tests` Skill, and a configurable non-interactive Bob command. Bob is not bundled. The actual IBM executable was unavailable on the development machine; live agent execution remains a separate verification step. Preparing a survivor handoff does not claim the agent ran.
+Gauntlet connects three Bob extension points to the mutation loop:
+
+1. `gauntlet init` patches the documented `Stop` lifecycle hook without replacing existing user hooks. Bob finishing a task can trigger a mutation run scoped to changed source files.
+2. Surviving mutations are written to `.gauntlet/survivors.md`, which gives the bundled `strengthen-tests` Skill exact files, lines, operators, and behavior gaps to address.
+3. `gauntlet strengthen` can invoke a configured non-interactive Bob command, verify the resulting file changes, rerun mutation testing, and report a comparable before/after score. `gauntlet gate` separately enforces the configured merge threshold against the stored run.
+
+Bob is not bundled. The actual IBM executable was unavailable on the development machine, so live agent execution remains a separate verification step. `strengthen --prepare-only` demonstrates the handoff without claiming that Bob ran.
 
 Official references: [Bob lifecycle hooks](https://bob.ibm.com/docs/ide/configuration/lifecycle-hooks), [Bob non-interactive sessions](https://bob.ibm.com/docs/shell/getting-started/start-bobshell-non-interactive), [Stryker configuration](https://stryker-mutator.io/docs/stryker-js/configuration/).
 

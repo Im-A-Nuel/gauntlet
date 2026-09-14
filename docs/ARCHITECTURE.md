@@ -2,7 +2,7 @@
 
 ## Overview
 
-Gauntlet is a local-first toolchain: a single Go CLI orchestrates a mutation engine, the IBM Bob 2.0 agent, and JSON artifacts on disk. A Next.js dashboard renders the artifacts. There is no server, database, or auth in the MVP; the file system is the contract between components. This keeps the 48-hour build honest and makes the demo impossible to break by network failure.
+Gauntlet is a local-first toolchain: a single Go CLI orchestrates a mutation engine, the IBM Bob agent, and JSON artifacts on disk. A Next.js server serves the dashboard and artifact API; there is no separate backend service, database, or auth. The file system is the contract between components. Bundled reports can be viewed without a live agent or network connection, while live IBM Bob execution still depends on its installed environment and service access.
 
 ## System Diagram
 
@@ -52,13 +52,13 @@ Gauntlet is a local-first toolchain: a single Go CLI orchestrates a mutation eng
 Stryker supplies mutant generation, sandboxing, and parallel test execution. Gauntlet never implements mutation operators itself; it generates a per-run `stryker.conf.json` with `mutate` limited to the changed source files and `concurrency: 4`, then parses `reports/mutation/mutation.json`.
 
 ### 3. Bob 2.0 integration layer
-- **Hook (auto-trigger)**: agent-stop entry in `.bob/settings.json` runs `gauntlet run --changed`, so every Bob session ends with a verdict on its own work.
+- **Hook (configured trigger)**: a documented `Stop` entry in `.bob/settings.json` runs `gauntlet run --changed`. The installer preserves existing settings; live firing still requires an IBM Bob installation.
 - **Skill (strengthen-tests)**: a `.bob/skills/strengthen-tests/SKILL.md` instructing Bob to read `.gauntlet/survivors.md`, write the minimal tests that kill each surviving mutant without weakening existing assertions, and run the test suite before finishing.
-- **Headless Shell**: `gauntlet strengthen` shells out to non-interactive Bob (Bob Shell v2 automation mode) with a prompt that activates the Skill. Exact flags are confirmed in the hour-1 spike; the fallback is instructing the judge-visible flow through interactive `bob chat` with the same Skill.
-- **Subagents**: Bob's own subagent mechanism is exercised inside the strengthen task (the Skill directs Bob to analyze survivors in parallel per file). Gauntlet additionally achieves parallel adversarial execution through Stryker workers; the pitch presents both honestly.
+- **Headless Shell**: `gauntlet strengthen` invokes a configurable executable and argument array without shell interpolation. Its default follows the documented `bob run` prompt syntax, but the exact installed CLI and automatic Skill activation remain unverified locally. `--prepare-only` generates the handoff without claiming Bob ran.
+- **Subagents**: the Skill instructs Bob to delegate per-file analysis when the survivor set spans more than three files. This path is implemented but cannot be represented as exercised until live IBM Bob verification is available. Stryker worker concurrency is separate and verified.
 
-### 4. Dashboard (Next.js 14)
-App Router, one API route (`/api/runs`) that reads `.gauntlet/runs/` (path configurable via env), pages: Overview (Trust Score gauge vs coverage bar), Matrix (files x mutants, green/red cells), Survivors (mutation diff viewer), Compare (run A vs run B delta). Recharts for the gauge and history; Tailwind for layout. Demo artifacts are committed under `dashboard/sample-runs/` so the Vercel deployment works standalone.
+### 4. Dashboard (Next.js 16)
+Next.js App Router with three same-origin APIs: `/api/runs`, `/api/runs/:runId`, and `/api/compare`. The reader uses `GAUNTLET_RUNS_DIR` when explicitly configured, otherwise local `.gauntlet/runs`, then bundled recorded samples. Views are Overview (policy and score evidence), Matrix (file mutation strips and dialog inspector), Survivors (searchable outcome list), and Compare (before/after score and per-file delta). Recharts renders the comparison chart; semantic CSS tokens and the Tailwind pipeline own layout and visual styling. Strict schema checks prevent inconsistent artifacts from being displayed.
 
 ## Key Design Decisions
 
@@ -71,7 +71,7 @@ App Router, one API route (`/api/runs`) that reads `.gauntlet/runs/` (path confi
 ## Security Considerations
 
 - Mutated code executes only inside Stryker's sandbox directory with the project's own test command; Gauntlet never executes mutants against a live environment.
-- The Bob hook runs a fixed binary with fixed flags, no user-interpolated shell strings.
+- Bob and Stryker child processes use executable-plus-argument arrays without user-interpolated shell strings.
 - The GitHub Action needs no secrets; it operates on the checked-out repo only.
 
 ## Scalability Plan (post-MVP)

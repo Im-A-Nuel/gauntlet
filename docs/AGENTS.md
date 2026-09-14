@@ -8,7 +8,7 @@ Gauntlet — adversarial verification for AI-written code: mutation-based Trust 
 ## Stack
 - CLI: Go 1.22, cobra. Packages under `internal/` (mutate, bob, report, gate).
 - Mutation engine: StrykerJS via child process. We NEVER implement mutation operators ourselves.
-- Dashboard: Next.js 14 App Router, TypeScript, Tailwind, Recharts. Reads JSON artifacts only.
+- Dashboard: Next.js 16 App Router, TypeScript, Tailwind, Recharts. Reads JSON artifacts only. Framework updated to a supported release during implementation.
 - No database. Artifacts in `.gauntlet/runs/`. Schemas in `docs/SCHEMA.md` are the source of truth.
 
 ## Commands
@@ -44,7 +44,7 @@ docs/                REQUIREMENTS, ARCHITECTURE, SCHEMA, ROADMAP, DEMO
 - The dashboard must render fully from `dashboard/sample-runs/` with no CLI present. Never fetch anything remote.
 - `gauntlet init` PATCHES `.bob/settings.json`; never overwrite user hooks.
 - Stryker runs are always scoped: pass explicit `mutate` file lists; never mutate the whole repo.
-- Headless Bob flags live in `internal/bob/shell.go` behind one function; if Bob's CLI differs at the hackathon, that is the only file to change.
+- Headless Bob invocation lives in `internal/bob/headless.go` behind a configurable executable and argument array.
 
 ## Do NOT
 - Do not add a database, auth, or Docker.
@@ -54,4 +54,4 @@ docs/                REQUIREMENTS, ARCHITECTURE, SCHEMA, ROADMAP, DEMO
 - Do not touch `.gauntlet/runs/` by hand; artifacts are written by the CLI only.
 
 ## Current Focus
-Phase 0 prep: repo scaffold, demo-repo with deliberately shallow tests, Stryker baseline timing.
+Codex-owned dashboard, shared docs, integration QA, samples, and CI definitions are complete. Remaining CLI hardening and live IBM Bob verification are listed in `PROGRESS.md` and `docs/COORDINATOR_NOTES.md`.

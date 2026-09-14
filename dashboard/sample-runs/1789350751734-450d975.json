@@ -1,0 +1,414 @@
+{
+  "schemaVersion": 1,
+  "runId": "1789350751734-450d975",
+  "createdAt": "2026-09-14T01:52:31Z",
+  "baseRef": "d1f85d4",
+  "headSha": "450d9751974c12dff2488a55c62c822805002085",
+  "trigger": "manual",
+  "threshold": 80,
+  "changedFiles": [
+    "src/cart.ts",
+    "src/pricing.ts"
+  ],
+  "totals": {
+    "mutants": 47,
+    "killed": 35,
+    "survived": 12,
+    "timeout": 0,
+    "noCoverage": 0,
+    "trustScore": 74.5,
+    "lineCoverage": 100,
+    "durationMs": 43927
+  },
+  "files": [
+    {
+      "path": "src/cart.ts",
+      "trustScore": 74.1,
+      "mutants": [
+        {
+          "id": "2",
+          "mutator": "ConditionalExpression",
+          "line": 14,
+          "status": "killed",
+          "original": "  return items.length === 0;",
+          "mutated": "  return false;"
+        },
+        {
+          "id": "3",
+          "mutator": "EqualityOperator",
+          "line": 14,
+          "status": "killed",
+          "original": "  return items.length === 0;",
+          "mutated": "  return items.length !== 0;"
+        },
+        {
+          "id": "0",
+          "mutator": "BlockStatement",
+          "line": 13,
+          "status": "killed",
+          "original": "export function isEmpty(items: CartItem[]): boolean {\n  return items.length === 0;\n}",
+          "mutated": "export function isEmpty(items: CartItem[]): boolean {}"
+        },
+        {
+          "id": "1",
+          "mutator": "ConditionalExpression",
+          "line": 14,
+          "status": "killed",
+          "original": "  return items.length === 0;",
+          "mutated": "  return true;"
+        },
+        {
+          "id": "6",
+          "mutator": "ArithmeticOperator",
+          "line": 18,
+          "status": "killed",
+          "original": "  return round2(items.reduce((sum, item) =\u003e sum + item.unitPrice * item.qty, 0));",
+          "mutated": "  return round2(items.reduce((sum, item) =\u003e sum - item.unitPrice * item.qty, 0));"
+        },
+        {
+          "id": "5",
+          "mutator": "ArrowFunction",
+          "line": 18,
+          "status": "killed",
+          "original": "  return round2(items.reduce((sum, item) =\u003e sum + item.unitPrice * item.qty, 0));",
+          "mutated": "  return round2(items.reduce(() =\u003e undefined, 0));"
+        },
+        {
+          "id": "4",
+          "mutator": "BlockStatement",
+          "line": 17,
+          "status": "killed",
+          "original": "export function cartSubtotal(items: CartItem[]): number {\n  return round2(items.reduce((sum, item) =\u003e sum + item.unitPrice * item.qty, 0));\n}",
+          "mutated": "export function cartSubtotal(items: CartItem[]): number {}"
+        },
+        {
+          "id": "7",
+          "mutator": "ArithmeticOperator",
+          "line": 18,
+          "status": "survived",
+          "original": "  return round2(items.reduce((sum, item) =\u003e sum + item.unitPrice * item.qty, 0));",
+          "mutated": "  return round2(items.reduce((sum, item) =\u003e sum + item.unitPrice / item.qty, 0));"
+        },
+        {
+          "id": "9",
+          "mutator": "BooleanLiteral",
+          "line": 22,
+          "status": "killed",
+          "original": "  if (!coupon) {",
+          "mutated": "  if (coupon) {"
+        },
+        {
+          "id": "10",
+          "mutator": "ConditionalExpression",
+          "line": 22,
+          "status": "killed",
+          "original": "  if (!coupon) {",
+          "mutated": "  if (true) {"
+        },
+        {
+          "id": "8",
+          "mutator": "BlockStatement",
+          "line": 21,
+          "status": "killed",
+          "original": "export function applyCoupon(subtotal: number, coupon?: Coupon): number {\n  if (!coupon) {\n    return subtotal;\n  }\n  if (coupon.type === \"percent\") {\n    return round2(subtotal * (1 - coupon.value / 100));\n  }\n  return Math.max(0, round2(subtotal - coupon.value));\n}",
+          "mutated": "export function applyCoupon(subtotal: number, coupon?: Coupon): number {}"
+        },
+        {
+          "id": "12",
+          "mutator": "BlockStatement",
+          "line": 22,
+          "status": "killed",
+          "original": "  if (!coupon) {\n    return subtotal;\n  }",
+          "mutated": "  if (!coupon) {}"
+        },
+        {
+          "id": "11",
+          "mutator": "ConditionalExpression",
+          "line": 22,
+          "status": "killed",
+          "original": "  if (!coupon) {",
+          "mutated": "  if (false) {"
+        },
+        {
+          "id": "14",
+          "mutator": "ConditionalExpression",
+          "line": 25,
+          "status": "killed",
+          "original": "  if (coupon.type === \"percent\") {",
+          "mutated": "  if (false) {"
+        },
+        {
+          "id": "13",
+          "mutator": "ConditionalExpression",
+          "line": 25,
+          "status": "survived",
+          "original": "  if (coupon.type === \"percent\") {",
+          "mutated": "  if (true) {"
+        },
+        {
+          "id": "16",
+          "mutator": "StringLiteral",
+          "line": 25,
+          "status": "killed",
+          "original": "  if (coupon.type === \"percent\") {",
+          "mutated": "  if (coupon.type === \"\") {"
+        },
+        {
+          "id": "15",
+          "mutator": "EqualityOperator",
+          "line": 25,
+          "status": "survived",
+          "original": "  if (coupon.type === \"percent\") {",
+          "mutated": "  if (coupon.type !== \"percent\") {"
+        },
+        {
+          "id": "18",
+          "mutator": "ArithmeticOperator",
+          "line": 26,
+          "status": "killed",
+          "original": "    return round2(subtotal * (1 - coupon.value / 100));",
+          "mutated": "    return round2(subtotal / (1 - coupon.value / 100));"
+        },
+        {
+          "id": "17",
+          "mutator": "BlockStatement",
+          "line": 25,
+          "status": "survived",
+          "original": "  if (coupon.type === \"percent\") {\n    return round2(subtotal * (1 - coupon.value / 100));\n  }",
+          "mutated": "  if (coupon.type === \"percent\") {}"
+        },
+        {
+          "id": "20",
+          "mutator": "ArithmeticOperator",
+          "line": 26,
+          "status": "killed",
+          "original": "    return round2(subtotal * (1 - coupon.value / 100));",
+          "mutated": "    return round2(subtotal * (1 - coupon.value * 100));"
+        },
+        {
+          "id": "19",
+          "mutator": "ArithmeticOperator",
+          "line": 26,
+          "status": "survived",
+          "original": "    return round2(subtotal * (1 - coupon.value / 100));",
+          "mutated": "    return round2(subtotal * (1 + coupon.value / 100));"
+        },
+        {
+          "id": "22",
+          "mutator": "ArithmeticOperator",
+          "line": 28,
+          "status": "killed",
+          "original": "  return Math.max(0, round2(subtotal - coupon.value));",
+          "mutated": "  return Math.max(0, round2(subtotal + coupon.value));"
+        },
+        {
+          "id": "21",
+          "mutator": "MethodExpression",
+          "line": 28,
+          "status": "survived",
+          "original": "  return Math.max(0, round2(subtotal - coupon.value));",
+          "mutated": "  return Math.min(0, round2(subtotal - coupon.value));"
+        },
+        {
+          "id": "24",
+          "mutator": "ConditionalExpression",
+          "line": 32,
+          "status": "killed",
+          "original": "  if (isEmpty(items)) {",
+          "mutated": "  if (true) {"
+        },
+        {
+          "id": "23",
+          "mutator": "BlockStatement",
+          "line": 31,
+          "status": "killed",
+          "original": "export function cartTotal(items: CartItem[], coupon?: Coupon): number {\n  if (isEmpty(items)) {\n    return 0;\n  }\n  return applyCoupon(cartSubtotal(items), coupon);\n}",
+          "mutated": "export function cartTotal(items: CartItem[], coupon?: Coupon): number {}"
+        },
+        {
+          "id": "26",
+          "mutator": "BlockStatement",
+          "line": 32,
+          "status": "killed",
+          "original": "  if (isEmpty(items)) {\n    return 0;\n  }",
+          "mutated": "  if (isEmpty(items)) {}"
+        },
+        {
+          "id": "25",
+          "mutator": "ConditionalExpression",
+          "line": 32,
+          "status": "survived",
+          "original": "  if (isEmpty(items)) {",
+          "mutated": "  if (false) {"
+        }
+      ]
+    },
+    {
+      "path": "src/pricing.ts",
+      "trustScore": 75,
+      "mutants": [
+        {
+          "id": "28",
+          "mutator": "ArithmeticOperator",
+          "line": 10,
+          "status": "killed",
+          "original": "  return Math.round(n * 100) / 100;",
+          "mutated": "  return Math.round(n * 100) * 100;"
+        },
+        {
+          "id": "27",
+          "mutator": "BlockStatement",
+          "line": 9,
+          "status": "killed",
+          "original": "export function round2(n: number): number {\n  return Math.round(n * 100) / 100;\n}",
+          "mutated": "export function round2(n: number): number {}"
+        },
+        {
+          "id": "29",
+          "mutator": "ArithmeticOperator",
+          "line": 10,
+          "status": "killed",
+          "original": "  return Math.round(n * 100) / 100;",
+          "mutated": "  return Math.round(n / 100) / 100;"
+        },
+        {
+          "id": "30",
+          "mutator": "BlockStatement",
+          "line": 13,
+          "status": "killed",
+          "original": "export function isEligibleForBulkDiscount(qty: number, bulkThreshold: number): boolean {\n  return qty \u003e= bulkThreshold;\n}",
+          "mutated": "export function isEligibleForBulkDiscount(qty: number, bulkThreshold: number): boolean {}"
+        },
+        {
+          "id": "32",
+          "mutator": "ConditionalExpression",
+          "line": 14,
+          "status": "killed",
+          "original": "  return qty \u003e= bulkThreshold;",
+          "mutated": "  return false;"
+        },
+        {
+          "id": "31",
+          "mutator": "ConditionalExpression",
+          "line": 14,
+          "status": "survived",
+          "original": "  return qty \u003e= bulkThreshold;",
+          "mutated": "  return true;"
+        },
+        {
+          "id": "33",
+          "mutator": "EqualityOperator",
+          "line": 14,
+          "status": "killed",
+          "original": "  return qty \u003e= bulkThreshold;",
+          "mutated": "  return qty \u003e bulkThreshold;"
+        },
+        {
+          "id": "34",
+          "mutator": "EqualityOperator",
+          "line": 14,
+          "status": "survived",
+          "original": "  return qty \u003e= bulkThreshold;",
+          "mutated": "  return qty \u003c bulkThreshold;"
+        },
+        {
+          "id": "37",
+          "mutator": "ConditionalExpression",
+          "line": 18,
+          "status": "killed",
+          "original": "  if (isEligibleForBulkDiscount(input.qty, input.bulkThreshold)) {",
+          "mutated": "  if (false) {"
+        },
+        {
+          "id": "36",
+          "mutator": "ConditionalExpression",
+          "line": 18,
+          "status": "killed",
+          "original": "  if (isEligibleForBulkDiscount(input.qty, input.bulkThreshold)) {",
+          "mutated": "  if (true) {"
+        },
+        {
+          "id": "35",
+          "mutator": "BlockStatement",
+          "line": 17,
+          "status": "killed",
+          "original": "export function unitPriceAfterDiscount(input: PricingInput): number {\n  if (isEligibleForBulkDiscount(input.qty, input.bulkThreshold)) {\n    return round2(input.unitPrice * (1 - input.bulkDiscountPct / 100));\n  }\n  return input.unitPrice;\n}",
+          "mutated": "export function unitPriceAfterDiscount(input: PricingInput): number {}"
+        },
+        {
+          "id": "38",
+          "mutator": "BlockStatement",
+          "line": 18,
+          "status": "survived",
+          "original": "  if (isEligibleForBulkDiscount(input.qty, input.bulkThreshold)) {\n    return round2(input.unitPrice * (1 - input.bulkDiscountPct / 100));\n  }",
+          "mutated": "  if (isEligibleForBulkDiscount(input.qty, input.bulkThreshold)) {}"
+        },
+        {
+          "id": "39",
+          "mutator": "ArithmeticOperator",
+          "line": 19,
+          "status": "killed",
+          "original": "    return round2(input.unitPrice * (1 - input.bulkDiscountPct / 100));",
+          "mutated": "    return round2(input.unitPrice / (1 - input.bulkDiscountPct / 100));"
+        },
+        {
+          "id": "40",
+          "mutator": "ArithmeticOperator",
+          "line": 19,
+          "status": "killed",
+          "original": "    return round2(input.unitPrice * (1 - input.bulkDiscountPct / 100));",
+          "mutated": "    return round2(input.unitPrice * (1 + input.bulkDiscountPct / 100));"
+        },
+        {
+          "id": "41",
+          "mutator": "ArithmeticOperator",
+          "line": 19,
+          "status": "killed",
+          "original": "    return round2(input.unitPrice * (1 - input.bulkDiscountPct / 100));",
+          "mutated": "    return round2(input.unitPrice * (1 - input.bulkDiscountPct * 100));"
+        },
+        {
+          "id": "44",
+          "mutator": "ArithmeticOperator",
+          "line": 27,
+          "status": "killed",
+          "original": "  const tax = subtotal * (input.taxRatePct / 100);",
+          "mutated": "  const tax = subtotal / (input.taxRatePct / 100);"
+        },
+        {
+          "id": "43",
+          "mutator": "ArithmeticOperator",
+          "line": 26,
+          "status": "killed",
+          "original": "  const subtotal = discountedUnitPrice * input.qty;",
+          "mutated": "  const subtotal = discountedUnitPrice / input.qty;"
+        },
+        {
+          "id": "42",
+          "mutator": "BlockStatement",
+          "line": 24,
+          "status": "killed",
+          "original": "export function calculateLineTotal(input: PricingInput): number {\n  const discountedUnitPrice = unitPriceAfterDiscount(input);\n  const subtotal = discountedUnitPrice * input.qty;\n  const tax = subtotal * (input.taxRatePct / 100);\n  return round2(subtotal + tax);\n}",
+          "mutated": "export function calculateLineTotal(input: PricingInput): number {}"
+        },
+        {
+          "id": "45",
+          "mutator": "ArithmeticOperator",
+          "line": 27,
+          "status": "survived",
+          "original": "  const tax = subtotal * (input.taxRatePct / 100);",
+          "mutated": "  const tax = subtotal * (input.taxRatePct * 100);"
+        },
+        {
+          "id": "46",
+          "mutator": "ArithmeticOperator",
+          "line": 28,
+          "status": "survived",
+          "original": "  return round2(subtotal + tax);",
+          "mutated": "  return round2(subtotal - tax);"
+        }
+      ]
+    }
+  ],
+  "comparedTo": "1789318719140-3bb5269"
+}

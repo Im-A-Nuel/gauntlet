@@ -1,5 +1,7 @@
 # MVP Roadmap
 
+Planning timeline retained for the hackathon. Implementation truth and measured results live in `PROGRESS.md`; unchecked items below include external submission/deployment work and are not evidence that the corresponding code is absent.
+
 ## MVP Definition
 
 The MVP is one complete, reproducible loop shown live: Bob finishes a feature with green tests and high coverage; the agent-stop hook fires Gauntlet; the dashboard shows a low Trust Score with surviving mutants; `gauntlet strengthen` sends survivors to Bob; the re-run shows the score above threshold and the CI gate flipping from blocked to pass. Everything else is garnish.

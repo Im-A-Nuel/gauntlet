@@ -1,5 +1,7 @@
 # Gauntlet
 
+Historical product brief. For executable setup, measured results, and current integration limitations, use the repository-root README.md and PROGRESS.md. Statistics and target scores in this brief are unverified planning assumptions.
+
 **AI writes the code. AI writes the tests. Gauntlet tests the tests.**
 
 ## Overview
@@ -19,7 +21,7 @@ Target users: engineering teams adopting AI coding agents who need a merge gate 
 | Orchestrator CLI | Go 1.22 (`gauntlet` binary) |
 | Mutation core | StrykerJS (TypeScript/JavaScript targets) |
 | AI agent | IBM Bob 2.0 (IDE + Bob Shell v2 headless), Hooks, Skills, Subagents |
-| Dashboard | Next.js 14 (App Router), TypeScript, Tailwind CSS, Recharts |
+| Dashboard | Next.js 16 (App Router), TypeScript, Tailwind CSS, Recharts |
 | Artifacts | JSON files under `.gauntlet/runs/` (no external DB) |
 | CI gate | GitHub Actions |
 | Hosting (dashboard demo) | Vercel |

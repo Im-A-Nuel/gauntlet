@@ -1,0 +1,44 @@
+name: Mutation policy
+
+on:
+  pull_request:
+    paths:
+      - 'demo-repo/src/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trust:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: demo-repo/package-lock.json
+      - run: npm ci --prefix demo-repo
+      - run: go install ./cmd/gauntlet
+      - run: gauntlet --repo demo-repo init
+      - name: Mutate changed demo source
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          base="${PR_BASE:-5b4762e}"
+          gauntlet --repo demo-repo run --changed --base-ref "$base" --test-command "npm run test:strong" --trigger ci
+      - name: Enforce minimum test strength
+        run: gauntlet --repo demo-repo gate --min-score 80
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gauntlet-run
+          path: demo-repo/.gauntlet/runs/
+          include-hidden-files: true

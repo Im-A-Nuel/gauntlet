@@ -111,7 +111,7 @@ that fails on the mutated code and passes on the original. Rules:
 {
   "hooks": {
     "Stop": [
-      { "hooks": [{ "type": "command", "command": "gauntlet run --changed --trigger hook", "timeout": 240 }] }
+      { "hooks": [{ "type": "command", "command": "gauntlet run --changed --trigger hook", "timeout": 300 }] }
     ]
   }
 }

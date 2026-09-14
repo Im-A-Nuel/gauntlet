@@ -1,12 +1,26 @@
-# Coordinator review notes for Claude
+# Integration closeout notes
 
-Please read before final verification (Codex will also send as a follow-up if this turn finishes first).
+Reviewed by Codex on 2026-09-14 after the CLI/demo implementation and dependency upgrade were merged into `main`.
 
-- Git now on feat/mvp, main points to the initial documentation commit. No source files have been committed yet, so your changed-source demo baseline is still valid. Do not commit/push.
-- Dashboard production build and four artifact tests passed. It strictly recomputes scores/counts when reading sample JSON. Use arrays [] rather than null for files, mutants and changedFiles. Raw statuses as SCHEMA.
-- I updated SCHEMA hook example to documented nested Stop/hooks/type:command format, with timeout 240 seconds. Real IBM integration remains unverified locally.
-- Review current mutate.Execute on Windows: exec.Command("npx", ...) cannot directly execute npm .cmd shim. Prefer running the installed Stryker JS entrypoint using node, no shell interpolation and no automatic network install. Check actual Stryker CLI config argument format rather than assuming --configFile.
-- Ensure report.Read validates values/counts/formula/HEAD; a syntactically valid JSON object with a fabricated score must not pass the gate. Reject missing/unknown statuses and NaN thresholds.
-- A failed mutation run must not leave an old successful report eligible for the gate. At minimum record/track latest attempt status and use unique per-run engine report paths. Check locking and cleanup.
-- Check --repo demo-repo with parent Git root: config paths and changed-file paths must be relative to target project, not accidentally repository root.
-- Please write docs/CLAUDE_PROGRESS.md soon with running status and blockers so progress is visible to both agents.
+## Verified
+
+- `go test ./...`, `go vet ./...`, and `go build ./cmd/gauntlet` pass across eight Go packages.
+- The demo weak suite passes 12 tests; the additive strong suite passes 33 tests. Both report 100% line coverage.
+- Fresh Stryker 10 runs against the same 47 mutants produced a real 74.5% baseline and 97.9% follow-up. `gate --min-score 80` returned exit 1 for the baseline and exit 0 for the follow-up.
+- Windows mutation execution uses the installed Stryker JavaScript entrypoint through Node instead of the `npx.cmd` shim.
+- Scope resolution handles deleted files, NUL-delimited unusual filenames, invalid base refs, and symlinks escaping the project.
+- Dashboard artifact parsing recomputes counts and scores, rejects malformed measurements, and never silently replaces a broken configured live directory with samples.
+- Dashboard unit tests, strict type generation/checking, production build, Playwright interaction/API tests, axe checks, and responsive overflow checks pass.
+
+## Remaining CLI hardening
+
+1. `cmd/gauntlet/strengthen.go` acquires `.gauntlet/.lock` and defers cleanup, but several error paths call `die()`, which ultimately calls `os.Exit`. Go does not run deferred cleanup after `os.Exit`, so a failed Bob invocation can leave the lock behind. Return typed errors from the locked operation and map them to an exit code only after the deferred release has run; add a missing-Bob regression test.
+2. `internal/report.Read` currently establishes JSON syntax and shape through unmarshalling but does not fully validate count consistency, status values, score recomputation, path-safe run IDs, or timestamps. The gate must reject fabricated or inconsistent artifacts before evaluating policy.
+
+## Explicit limitations
+
+- IBM Bob is not installed in this environment. Hook firing, live `bob run`, automatic Skill activation, and agent-written test changes remain unverified. `strengthen --prepare-only` is the honest local demonstration path.
+- The existence-only lock has no PID/liveness recovery after a process crash.
+- Test-strength verification uses file hashes and `expect(` counts, not semantic assertion analysis.
+- `demo-repo` retains two moderate `qs` advisories in a transitive Stryker development-tool chain; dashboard dependencies have no reported vulnerabilities.
+- GitHub branch protection must be enabled by the repository owner for the mutation workflow to become a merge-blocking required check.

@@ -21,20 +21,31 @@ func TestNewRunIDHandlesNoGit(t *testing.T) {
 	}
 }
 
-func TestWriteReadRoundTrip(t *testing.T) {
-	dir := t.TempDir()
-	score := 43.3
-	a := Artifact{
+// validArtifact returns a minimal but fully schema-valid, self-consistent
+// artifact (real Files/Totals built via the same score.go helpers the CLI
+// itself uses), suitable as a base for Write/Read round-trip tests now that
+// Read fail-closed validates everything it loads.
+func validArtifact(runID string) Artifact {
+	files := []FileResult{BuildFileResult("src/pricing.ts", []Mutant{
+		{ID: "1", Mutator: "ConditionalExpression", Line: 42, Status: StatusKilled, Original: "a", Mutated: "b"},
+	})}
+	return Artifact{
 		SchemaVersion: SchemaVersion,
-		RunID:         "1758945600000-a1b2c3d",
+		RunID:         runID,
 		CreatedAt:     "2026-09-26T14:00:00Z",
 		BaseRef:       "main",
 		HeadSha:       "a1b2c3d",
 		Trigger:       TriggerManual,
 		Threshold:     80,
 		ChangedFiles:  []string{"src/pricing.ts"},
-		Totals:        Totals{Mutants: 1, Killed: 1, TrustScore: &score},
+		Files:         files,
+		Totals:        BuildTotals(files, nil, 0),
 	}
+}
+
+func TestWriteReadRoundTrip(t *testing.T) {
+	dir := t.TempDir()
+	a := validArtifact("1758945600000-a1b2c3d")
 	path, err := Write(dir, a)
 	if err != nil {
 		t.Fatalf("Write: %v", err)
@@ -43,7 +54,7 @@ func TestWriteReadRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Read: %v", err)
 	}
-	if got.RunID != a.RunID || got.Totals.TrustScore == nil || *got.Totals.TrustScore != 43.3 {
+	if got.RunID != a.RunID || got.Totals.TrustScore == nil || *got.Totals.TrustScore != 100 {
 		t.Fatalf("round-trip mismatch: %+v (from %s)", got, path)
 	}
 }
@@ -66,7 +77,7 @@ func TestWriteLeavesNoTempFilesBehind(t *testing.T) {
 func TestLatestPicksMostRecentByRunID(t *testing.T) {
 	dir := t.TempDir()
 	for _, id := range []string{"100-abc", "300-abc", "200-abc"} {
-		if _, err := Write(dir, Artifact{RunID: id, SchemaVersion: SchemaVersion}); err != nil {
+		if _, err := Write(dir, validArtifact(id)); err != nil {
 			t.Fatalf("Write %s: %v", id, err)
 		}
 	}

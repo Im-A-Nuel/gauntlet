@@ -5,10 +5,25 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
 )
+
+// runIDPattern is the safe charset for a run ID: no path separators, no
+// "..", no null bytes — a run ID is joined directly into a filesystem path
+// (pathFor), and untrusted input reaches it via the `--run-id` CLI flag
+// (cmd/gauntlet/{gate,report}.go), so this is a path-traversal boundary, not
+// just a cosmetic format check.
+var runIDPattern = regexp.MustCompile(`^[A-Za-z0-9_-]+$`)
+
+func validateRunID(runID string) error {
+	if !runIDPattern.MatchString(runID) {
+		return fmt.Errorf("invalid run ID %q: must match %s (no path separators or \"..\")", runID, runIDPattern.String())
+	}
+	return nil
+}
 
 // RunsDirName is the directory (relative to a repo root) holding run artifacts.
 const RunsDirName = ".gauntlet/runs"
@@ -33,9 +48,13 @@ func RunsDir(repoRoot string) string {
 	return filepath.Join(repoRoot, filepath.FromSlash(RunsDirName))
 }
 
-// pathFor returns the artifact path for a given run ID.
-func pathFor(repoRoot, runID string) string {
-	return filepath.Join(RunsDir(repoRoot), runID+".json")
+// pathFor returns the artifact path for a given run ID, rejecting any run ID
+// that isn't a safe bare filename component (see runIDPattern).
+func pathFor(repoRoot, runID string) (string, error) {
+	if err := validateRunID(runID); err != nil {
+		return "", err
+	}
+	return filepath.Join(RunsDir(repoRoot), runID+".json"), nil
 }
 
 // Write atomically persists an artifact: encode to a temp file in the same
@@ -47,7 +66,10 @@ func Write(repoRoot string, a Artifact) (string, error) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", fmt.Errorf("create runs dir: %w", err)
 	}
-	dest := pathFor(repoRoot, a.RunID)
+	dest, err := pathFor(repoRoot, a.RunID)
+	if err != nil {
+		return "", err
+	}
 
 	data, err := json.MarshalIndent(a, "", "  ")
 	if err != nil {
@@ -76,15 +98,28 @@ func Write(repoRoot string, a Artifact) (string, error) {
 	return dest, nil
 }
 
-// Read loads one artifact by run ID.
+// Read loads one artifact by run ID and validates it fail-closed before
+// returning it: callers (gate, report) must never evaluate policy or print a
+// summary from a syntactically-valid-but-fabricated or corrupted artifact
+// (docs/COORDINATOR_NOTES.md). See Validate for the full contract.
 func Read(repoRoot, runID string) (Artifact, error) {
 	var a Artifact
-	data, err := os.ReadFile(pathFor(repoRoot, runID))
+	path, err := pathFor(repoRoot, runID)
+	if err != nil {
+		return a, err
+	}
+	data, err := os.ReadFile(path)
 	if err != nil {
 		return a, err
 	}
 	if err := json.Unmarshal(data, &a); err != nil {
 		return a, fmt.Errorf("parse artifact %s: %w", runID, err)
+	}
+	if a.RunID != runID {
+		return a, fmt.Errorf("artifact at %s.json has runId %q, want %q (filename/content mismatch)", runID, a.RunID, runID)
+	}
+	if err := a.Validate(); err != nil {
+		return a, fmt.Errorf("artifact %s failed validation: %w", runID, err)
 	}
 	return a, nil
 }

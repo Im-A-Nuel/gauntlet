@@ -8,6 +8,9 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/Im-A-Nuel/gauntlet/internal/report"
 )
 
 var binPath string
@@ -176,6 +179,55 @@ func TestCLIStrengthenPrepareOnlyWithNoSurvivorsIsClean(t *testing.T) {
 	}
 	if _, err := os.Stat(filepath.Join(dir, ".gauntlet", "survivors.md")); err != nil {
 		t.Fatalf("survivors.md not written: %v", err)
+	}
+}
+
+// TestStrengthenMissingBobExecutableLeavesNoLock is the regression test for
+// docs/COORDINATOR_NOTES.md's first CLI hardening finding: strengthen used
+// to call die() (os.Exit) after acquiring bob's lock, so a failed Bob
+// invocation left .gauntlet/.lock behind forever. It hand-writes a run
+// artifact with one surviving mutant (via the real report package, not a
+// Stryker run — no mutation testing happens here) so strengthen has
+// something to hand to Bob, then points --bob-cmd at an executable that
+// cannot possibly exist and asserts both the exit code and, critically,
+// that the lock file is gone once the process has exited.
+func TestStrengthenMissingBobExecutableLeavesNoLock(t *testing.T) {
+	dir := initTestRepo(t)
+	if res := runCLI(t, "--repo", dir, "init"); res.exitCode != 0 {
+		t.Fatalf("init failed: %s", res.stderr)
+	}
+
+	survived := report.Mutant{
+		ID: "1", Mutator: "ConditionalExpression", Line: 1,
+		Status: report.StatusSurvived, Original: "a", Mutated: "b",
+	}
+	files := []report.FileResult{report.BuildFileResult("src/a.ts", []report.Mutant{survived})}
+	artifact := report.Artifact{
+		SchemaVersion: report.SchemaVersion,
+		RunID:         "1700000000000-deadbee",
+		CreatedAt:     time.Now().UTC().Format(time.RFC3339),
+		BaseRef:       "main",
+		HeadSha:       "deadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+		Trigger:       report.TriggerManual,
+		Threshold:     80,
+		ChangedFiles:  []string{"src/a.ts"},
+		Files:         files,
+		Totals:        report.BuildTotals(files, nil, 0),
+	}
+	if _, err := report.Write(dir, artifact); err != nil {
+		t.Fatalf("write fake run artifact: %v", err)
+	}
+
+	res := runCLI(t, "--repo", dir, "strengthen", "--bob-cmd", "gauntlet-test-bob-does-not-exist")
+	if res.exitCode != ExitRunFailed {
+		t.Fatalf("strengthen with missing bob executable exit code = %d, want %d\nstdout: %s\nstderr: %s",
+			res.exitCode, ExitRunFailed, res.stdout, res.stderr)
+	}
+
+	lockPath := filepath.Join(dir, ".gauntlet", ".lock")
+	if _, err := os.Stat(lockPath); !os.IsNotExist(err) {
+		t.Fatalf(".gauntlet/.lock still present after a failed strengthen (stat err=%v); "+
+			"deferred lock release must run before the process exits", err)
 	}
 }
 

@@ -22,6 +22,7 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - [x] Exercise CLI, APIs, dashboard interactions, accessibility, and responsive layouts locally; verify the policy gate flips from exit 1 to exit 0.
 - [x] Finish shared documentation, dependency inventory, local QA, and CI workflow definitions.
 - [x] Re-art-direct the dashboard as a cinematic verification instrument, generate the project-bound 3D mutation pressure core, and bind its score trace and annotations to recorded run evidence.
+- [x] Harden CLI artifact integrity and strengthen lock cleanup: artifact reads now validate schema/counts/scores/path safety fail-closed, and every post-lock strengthen failure releases `.gauntlet/.lock` before its exit code is emitted.
 
 ## Open constraints
 
@@ -29,7 +30,6 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - User supplied origin https://github.com/Im-A-Nuel/gauntlet.git; read-only remote check found no existing refs. Working branch renamed to main as requested.
 - Requested UI skills `impeccable`, `design-taste-frontend`, and `high-end-visual-design` were not found in local Codex/Claude skill directories. Available requested skills: ui-ux-pro-max, antislop, antislop-ui.
 - Dashboard uses the cinematic monochrome verification-instrument direction in DESIGN.md and the supplied visual references.
-- Two CLI hardening findings remain in Claude's ownership: `strengthen` error exits can bypass deferred lock cleanup, and gate-side artifact reads need integrity validation before policy evaluation. See `docs/COORDINATOR_NOTES.md`.
 - `demo-repo` has two moderate transitive `qs` advisories through Stryker's development-only dependency chain. Dashboard audit is clean.
 
 ## Verification log
@@ -45,7 +45,8 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - CLI Go tests and go vet passed at the intermediate checkpoint. Integration review findings are recorded in docs/COORDINATOR_NOTES.md, including lock cleanup and stale-artifact policy.
 - Fresh Stryker 10 runs produced 47 mutants against the same two source files: weak tests killed 35 (74.5%, gate FAIL), strong tests killed 46 (97.9%, gate PASS), while line coverage remained 100%.
 - Dashboard checkpoint `d1f85d4` and CLI/dependency checkpoints through `450d975` are on `origin/main`; all commits use only Im-A-Nuel as author and committer.
+- CLI hardening: `go test ./...`, `go vet ./...`, and a standalone `go build ./cmd/gauntlet` pass after strict artifact validation and strengthen lock-release regression coverage. Dashboard typecheck and artifact tests remain green against the unchanged shared contract.
 
 ## Next checkpoint
 
-The cinematic dashboard implementation is ready for review at `http://127.0.0.1:3000` after running `npm run dev` in `dashboard/`. When Claude work resumes, close the two CLI hardening findings above and verify the Bob hook/headless flow on a machine with IBM Bob installed.
+The cinematic dashboard implementation is ready for review at `http://127.0.0.1:3000` after running `npm run dev` in `dashboard/`. The remaining product-level verification is a live Bob hook/headless flow on a machine with IBM Bob installed, followed by GitHub branch-protection configuration for the CI check.

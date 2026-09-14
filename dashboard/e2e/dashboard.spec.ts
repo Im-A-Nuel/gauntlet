@@ -15,6 +15,9 @@ test("recorded reports, inspection, filters, comparisons and mobile layout", asy
       (element) => getComputedStyle(element, "::before").backgroundImage,
     ),
   ).toContain("gauntlet-app-icon-192.png");
+  expect(
+    await wordmark.evaluate((element) => getComputedStyle(element).fontFamily),
+  ).toContain("Manrope Variable");
   await expect(page.locator('link[rel="icon"]')).toHaveCount(1);
   await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveCount(1);
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(

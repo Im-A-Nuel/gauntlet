@@ -23,6 +23,7 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - [x] Finish shared documentation, dependency inventory, local QA, and CI workflow definitions.
 - [x] Re-art-direct the dashboard as a cinematic verification instrument, generate the project-bound 3D mutation pressure core, and bind its score trace and annotations to recorded run evidence.
 - [x] Generate and integrate the Gauntlet app icon system: premium graphite/titanium master artwork, responsive header mark, browser/Apple metadata icons, and installable 192px/512px manifest assets.
+- [x] Refine the Gauntlet wordmark with a dedicated locally bundled variable typeface, optical spacing, and stable icon/text alignment while retaining IBM Plex for product UI and technical data.
 - [x] Harden CLI artifact integrity and strengthen lock cleanup: artifact reads now validate schema/counts/scores/path safety fail-closed, and every post-lock strengthen failure releases `.gauntlet/.lock` before its exit code is emitted.
 
 ## Open constraints
@@ -48,6 +49,7 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - Dashboard checkpoint `d1f85d4` and CLI/dependency checkpoints through `450d975` are on `origin/main`; all commits use only Im-A-Nuel as author and committer.
 - CLI hardening: `go test ./...`, `go vet ./...`, and a standalone `go build ./cmd/gauntlet` pass after strict artifact validation and strengthen lock-release regression coverage. Dashboard typecheck and artifact tests remain green against the unchanged shared contract.
 - App-icon integration: Next.js type generation/typecheck, four artifact tests, production build, and both Playwright suites pass. The build exposes `/icon.png`, `/apple-icon.png`, and `/manifest.webmanifest`; automated desktop/mobile QA also confirms the branded header mark, metadata links, no page errors, no horizontal overflow, and no axe WCAG A/AA violations.
+- Wordmark refinement: the local Manrope Variable face loads as the computed brand font in Playwright, while typecheck, four artifact tests, production build, both end-to-end suites, responsive overflow checks, and axe WCAG A/AA remain green.
 
 ## Next checkpoint
 

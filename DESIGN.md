@@ -9,7 +9,7 @@ The page answers one question: which changed behavior is insufficiently tested, 
 - The hero is staged as a bounded pressure chamber, not a conventional SaaS card grid. Its generated 3D mutation core shows fractured black titanium frames compressing a bright center. This makes the decorative focal point explain the product: Gauntlet applies controlled pressure and exposes weakness.
 - Ivory is the primary reading color on near-black graphite. A restrained amber seam marks verified evidence and the measured Trust Score. Red and green remain semantic mutation outcomes and always have text or symbols alongside them.
 - The composition is asymmetric and editorial. Large type and the score occupy the left, the mutation core occupies the center, and the merge-policy instrument is anchored at the right. Supporting report sections are calmer so the hero remains the single focal point.
-- IBM Plex Sans is bundled locally for the IBM developer context and dense technical reading. IBM Plex Mono is restricted to code, IDs, paths, labels, and measurements. No font is fetched at runtime.
+- IBM Plex Sans is bundled locally for the IBM developer context and dense technical reading. IBM Plex Mono is restricted to code, IDs, paths, labels, and measurements. The wordmark alone uses locally bundled Manrope Variable at a calibrated 650 weight: its cleaner geometric forms distinguish the brand without weakening the dashboard's IBM character. No font is fetched at runtime.
 
 ## Interaction and motion
 

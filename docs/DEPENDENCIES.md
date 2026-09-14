@@ -7,7 +7,7 @@
 - Zod 4: validate artifacts before showing scores or policy status.
 - Recharts 3.10.1: accessible before/after score chart.
 - Tailwind CSS / PostCSS plugin 4.3.3: styling pipeline; semantic project tokens and CSS own the visual system.
-- IBM Plex Sans / Mono via Fontsource: bundled typography, no remote font calls.
+- IBM Plex Sans / Mono and Manrope Variable via Fontsource: locally bundled typography with Manrope reserved for the wordmark, and no remote font calls.
 - tsx: execute focused artifact tests with Node's test runner.
 - Playwright test and axe-core Playwright integration: browser interaction, responsive overflow checks, screenshots, and accessibility testing. Installed browser channel is Microsoft Edge locally.
 - Prettier: consistent formatting for dashboard source and tests.

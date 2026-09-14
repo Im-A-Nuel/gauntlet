@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -198,6 +200,88 @@ function Inspector({
   );
 }
 
+function MutationCore({ run }: { run: Run }) {
+  const score = run.totals.trustScore ?? 0;
+  const detected = run.totals.killed + run.totals.timeout;
+  const scored = detected + run.totals.survived;
+  const coreStyle = {
+    "--score-offset": 100 - score,
+  } as CSSProperties;
+
+  function positionCore(event: ReactPointerEvent<HTMLDivElement>) {
+    if (
+      event.pointerType === "touch" ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    )
+      return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+    event.currentTarget.style.setProperty("--core-rotate-y", `${x * 7}deg`);
+    event.currentTarget.style.setProperty("--core-rotate-x", `${y * -5}deg`);
+    event.currentTarget.style.setProperty("--core-light-x", `${50 + x * 24}%`);
+    event.currentTarget.style.setProperty("--core-light-y", `${48 + y * 20}%`);
+  }
+
+  function resetCore(event: ReactPointerEvent<HTMLDivElement>) {
+    event.currentTarget.style.setProperty("--core-rotate-y", "0deg");
+    event.currentTarget.style.setProperty("--core-rotate-x", "0deg");
+    event.currentTarget.style.setProperty("--core-light-x", "50%");
+    event.currentTarget.style.setProperty("--core-light-y", "48%");
+  }
+
+  return (
+    <div
+      className="core-visual"
+      style={coreStyle}
+      onPointerMove={positionCore}
+      onPointerLeave={resetCore}
+      aria-hidden="true"
+    >
+      <div className="core-reticle core-reticle-outer" />
+      <div className="core-reticle core-reticle-inner" />
+      <svg className="score-orbit" viewBox="0 0 120 120">
+        <circle
+          className="score-orbit-track"
+          cx="60"
+          cy="60"
+          r="57"
+          pathLength="100"
+        />
+        <circle
+          key={`${run.runId}-${score}`}
+          className="score-orbit-progress"
+          cx="60"
+          cy="60"
+          r="57"
+          pathLength="100"
+        />
+      </svg>
+      <div className="core-image">
+        <Image
+          src="/visuals/mutation-core.webp"
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 760px) 90vw, (max-width: 1100px) 50vw, 520px"
+        />
+      </div>
+      <div className="core-reading core-reading-detected">
+        <span>Detected</span>
+        <strong>{detected}</strong>
+        <small>of {scored} scored</small>
+      </div>
+      <div className="core-reading core-reading-revision">
+        <span>Revision</span>
+        <strong>{run.headSha.slice(0, 7)}</strong>
+        <small>{run.changedFiles.length} changed files</small>
+      </div>
+      <span className="core-axis core-axis-x" />
+      <span className="core-axis core-axis-y" />
+    </div>
+  );
+}
+
 export function Dashboard({
   runs,
   source,
@@ -366,14 +450,27 @@ export function Dashboard({
             </div>
             {view === "overview" && (
               <>
-                <section className="hero-report">
+                <section
+                  className={`hero-report hero-${verdict(run)}`}
+                  aria-labelledby="hero-title"
+                >
+                  <div className="hero-atmosphere" aria-hidden="true" />
                   <div className="hero-main">
-                    <div className="eyebrow">Test strength, under pressure</div>
-                    <h1>
+                    <div className="hero-kicker">
+                      <span className="eyebrow">Adversarial verification</span>
+                      <span className="hero-run-id mono">
+                        Run {shortId(run)}
+                      </span>
+                    </div>
+                    <h1 id="hero-title">
                       {verdict(run) === "pass"
-                        ? "Sharper tests.\nStronger evidence."
-                        : "Tests passed.\nWhat did they miss?"}
+                        ? "Evidence,\nunder pressure."
+                        : "Your tests passed.\nThe mutations did too."}
                     </h1>
+                    <p className="hero-lede">
+                      Gauntlet challenged the changed code and measured which
+                      faults the current suite could actually detect.
+                    </p>
                     <div className="hero-score">
                       <span>{formatScore(run.totals.trustScore)}</span>
                       {run.totals.trustScore !== null && (
@@ -392,6 +489,7 @@ export function Dashboard({
                       without coverage
                     </p>
                   </div>
+                  <MutationCore run={run} />
                   <aside className="verdict-panel">
                     <div className="section-head">
                       <span className="eyebrow">Merge policy</span>

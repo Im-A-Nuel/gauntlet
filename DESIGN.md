@@ -1,16 +1,33 @@
 # Gauntlet visual direction
 
-Working direction proposed by Codex for the engineering verification dashboard: an inspection report inside a dark engineering console. ENERGY 2 / RHYTHM 2 / MOTION 1. Apply anti-slop during the build.
+Gauntlet is a cinematic verification instrument for engineers: a quiet black testing chamber where mutation evidence is the subject. ENERGY 3 / RHYTHM 2 / MOTION 2. Apply anti-slop during the build.
 
 The page answers one question: which changed behavior is insufficiently tested, and does the evidence clear the merge threshold?
 
-- Charcoal surfaces reduce glare alongside an editor. Warm ivory type supports long inspection sessions. Ochre highlights the primary measured score. Red and green are reserved for actual mutation outcomes; text labels carry the same meaning.
-- IBM Plex Sans is bundled locally for the IBM developer context and readable dense tables. IBM Plex Mono is restricted to code, IDs, paths, and numbers. No remote font fetch at runtime.
-- A compact top navigation follows the inspection workflow: verdict, matrix, survivors, comparison. The report fills the main canvas; no decorative activity feed or four-card KPI row.
-- The score is the focal point. Measured line coverage is adjacent, with an explicit explanation of the different denominators. Missing coverage stays missing.
-- File rows have compact mutant strips and open inspection details. Diffs display original and mutated code with textual markers, never color alone.
-- Movement only acknowledges interaction, 150ms color changes. Reduced motion disables transitions. No ambient animation.
-- 44px targets, visible focus, native labelled selectors, responsive single-column fallbacks, specific empty/error states.
-- All displayed measurements come from CLI artifacts. Bundled demo runs are visibly labelled as recorded samples; no fabricated live activity or simulated Bob execution.
+## Art direction
 
-Skill application: ui-ux-pro-max searches returned a fitting data-dense dashboard style and accessible interaction guidance. Its sales/landing page pattern was unrelated and rejected. antislop and antislop-ui shape the content hierarchy, state handling, and absence of decorative metrics. Requested impeccable, design-taste-frontend, high-end-visual-design were unavailable locally and in the resumed Claude session.
+- The hero is staged as a bounded pressure chamber, not a conventional SaaS card grid. Its generated 3D mutation core shows fractured black titanium frames compressing a bright center. This makes the decorative focal point explain the product: Gauntlet applies controlled pressure and exposes weakness.
+- Ivory is the primary reading color on near-black graphite. A restrained amber seam marks verified evidence and the measured Trust Score. Red and green remain semantic mutation outcomes and always have text or symbols alongside them.
+- The composition is asymmetric and editorial. Large type and the score occupy the left, the mutation core occupies the center, and the merge-policy instrument is anchored at the right. Supporting report sections are calmer so the hero remains the single focal point.
+- IBM Plex Sans is bundled locally for the IBM developer context and dense technical reading. IBM Plex Mono is restricted to code, IDs, paths, labels, and measurements. No font is fetched at runtime.
+
+## Interaction and motion
+
+- Motion explains state: the chamber reveals once, the Trust Score trace draws to its measured value, and pointer position gives the core restrained spatial depth. There is no endless ambient loop.
+- Hover and focus states use edge light and contrast, not scale-heavy movement. Reduced-motion users receive the complete final state without animation or parallax.
+- Navigation, selectors, table rows, filters, dialogs, copy feedback, loading, empty, and error states keep their native semantics and existing behavior.
+- Targets are at least 44px, focus is visible, tables reflow or scroll safely, and the layout has explicit 390px, 760px, 1100px, and wide-screen behavior.
+
+## Data integrity
+
+- Every displayed measurement comes from a CLI artifact. The 3D annotations, orbit trace, evidence counts, and threshold marker are bound to the selected run.
+- Coverage and Trust Score retain separate labels and explanations. Missing or insufficient evidence remains explicit.
+- Bundled demo runs are labelled as recorded samples. The interface does not fabricate live activity, agents, or execution.
+
+## Generated visual
+
+- Asset: `dashboard/public/visuals/mutation-core.webp`
+- Purpose: an original, transparent 3D product render of a mutation pressure core; nested fractured graphite frames compress a bright ivory center with one amber evidence seam.
+- Generation constraints: no text, logo, people, generic sphere/blob, blue-purple gradient, fake UI, or borrowed brand marks. The source generation is project-bound and must not be reused outside Gauntlet.
+
+Skill application: ui-ux-pro-max guided the high-contrast, asymmetric system and accessibility checks. antislop and antislop-ui enforce purposeful visuals, real data, measured motion, and complete interaction states. The generated 3D asset follows the imagegen project-bound asset workflow. Requested impeccable, design-taste-frontend, and high-end-visual-design remain unavailable locally and are not claimed.

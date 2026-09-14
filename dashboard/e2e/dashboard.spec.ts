@@ -12,6 +12,9 @@ test("recorded reports, inspection, filters, comparisons and mobile layout", asy
   await expect(
     page.getByRole("heading", { name: "Verification by file" }),
   ).toBeVisible();
+  const coreImage = page.locator(".core-image img");
+  await expect(coreImage).toBeVisible();
+  await coreImage.evaluate((image: HTMLImageElement) => image.decode());
   const runOptions = await page
     .getByRole("combobox", { name: "Run", exact: true })
     .locator("option")
@@ -97,6 +100,9 @@ test("recorded reports, inspection, filters, comparisons and mobile layout", asy
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(page.getByRole("main")).toBeVisible();
+  await page
+    .locator(".core-image img")
+    .evaluate((image: HTMLImageElement) => image.decode());
   await page.screenshot({
     path: "../artifacts/qa/overview-mobile.png",
     fullPage: true,

@@ -21,13 +21,14 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - [x] Generate real Stryker 10 sample runs at revision `450d975`: 74.5% baseline and 97.9% strengthened.
 - [x] Exercise CLI, APIs, dashboard interactions, accessibility, and responsive layouts locally; verify the policy gate flips from exit 1 to exit 0.
 - [x] Finish shared documentation, dependency inventory, local QA, and CI workflow definitions.
+- [x] Re-art-direct the dashboard as a cinematic verification instrument, generate the project-bound 3D mutation pressure core, and bind its score trace and annotations to recorded run evidence.
 
 ## Open constraints
 
 - IBM Bob executable is not currently on PATH; live Bob hook/headless integration needs actual installation and verified invocation. Do not represent a stub as verified IBM integration.
 - User supplied origin https://github.com/Im-A-Nuel/gauntlet.git; read-only remote check found no existing refs. Working branch renamed to main as requested.
 - Requested UI skills `impeccable`, `design-taste-frontend`, and `high-end-visual-design` were not found in local Codex/Claude skill directories. Available requested skills: ui-ux-pro-max, antislop, antislop-ui.
-- Dashboard uses the dark engineering inspection-report direction in DESIGN.md and the supplied monochrome visual references.
+- Dashboard uses the cinematic monochrome verification-instrument direction in DESIGN.md and the supplied visual references.
 - Two CLI hardening findings remain in Claude's ownership: `strengthen` error exits can bypass deferred lock cleanup, and gate-side artifact reads need integrity validation before policy evaluation. See `docs/COORDINATOR_NOTES.md`.
 - `demo-repo` has two moderate transitive `qs` advisories through Stryker's development-only dependency chain. Dashboard audit is clean.
 
@@ -40,10 +41,11 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - Official IBM docs confirm Stop event/nested hooks and bob run stdin invocation. Live executable absent.
 - In-app browser connection failed with runtime metadata error (missing sandboxPolicy); browser QA uses local Playwright/Edge fallback.
 - Local Edge exercised report selection, clipboard feedback, mutant dialog/Escape handling, filters, comparisons, and routes at 375, 768, 1024, and 1440 px with no horizontal overflow.
+- The cinematic dashboard pass keeps the existing artifact contract and behavior, adds a 438 KB transparent WebP focal asset, data-bound score motion, pointer depth, and a complete reduced-motion fallback. Desktop and 375 px screenshots passed visual review; the original generated image remains in the local generation output while the larger copied PNG was replaced by the optimized WebP.
 - CLI Go tests and go vet passed at the intermediate checkpoint. Integration review findings are recorded in docs/COORDINATOR_NOTES.md, including lock cleanup and stale-artifact policy.
 - Fresh Stryker 10 runs produced 47 mutants against the same two source files: weak tests killed 35 (74.5%, gate FAIL), strong tests killed 46 (97.9%, gate PASS), while line coverage remained 100%.
 - Dashboard checkpoint `d1f85d4` and CLI/dependency checkpoints through `450d975` are on `origin/main`; all commits use only Im-A-Nuel as author and committer.
 
 ## Next checkpoint
 
-Codex-owned implementation is complete in this checkpoint. When Claude work resumes, close the two CLI hardening findings above and verify the Bob hook/headless flow on a machine with IBM Bob installed.
+The cinematic dashboard implementation is ready for review at `http://127.0.0.1:3000` after running `npm run dev` in `dashboard/`. When Claude work resumes, close the two CLI hardening findings above and verify the Bob hook/headless flow on a machine with IBM Bob installed.

@@ -8,6 +8,19 @@ test("recorded reports, inspection, filters, comparisons and mobile layout", asy
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
+  const wordmark = page.getByRole("link", { name: "Gauntlet overview" });
+  await expect(wordmark).toBeVisible();
+  expect(
+    await wordmark.evaluate(
+      (element) => getComputedStyle(element, "::before").backgroundImage,
+    ),
+  ).toContain("gauntlet-app-icon-192.png");
+  await expect(page.locator('link[rel="icon"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="apple-touch-icon"]')).toHaveCount(1);
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
+    "href",
+    "/manifest.webmanifest",
+  );
   await expect(page.getByText("Recorded demo", { exact: true })).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Verification by file" }),

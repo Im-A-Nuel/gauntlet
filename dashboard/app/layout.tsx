@@ -6,8 +6,10 @@ import "@fontsource/ibm-plex-mono/400.css";
 import "./globals.css";
 export const metadata: Metadata = {
   title: "Gauntlet | Test the tests",
+  applicationName: "Gauntlet",
   description:
     "Inspect mutation testing evidence, surviving mutants, and merge policy.",
+  manifest: "/manifest.webmanifest",
 };
 export default function RootLayout({
   children,

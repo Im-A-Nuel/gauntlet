@@ -29,5 +29,7 @@ The page answers one question: which changed behavior is insufficiently tested, 
 - Asset: `dashboard/public/visuals/mutation-core.webp`
 - Purpose: an original, transparent 3D product render of a mutation pressure core; nested fractured graphite frames compress a bright ivory center with one amber evidence seam.
 - Generation constraints: no text, logo, people, generic sphere/blob, blue-purple gradient, fake UI, or borrowed brand marks. The source generation is project-bound and must not be reused outside Gauntlet.
+- App icon: `dashboard/public/brand/gauntlet-app-icon-master.png`, with 512px, 192px, Apple, and Next.js app-icon variants. Two opposing black-titanium pressure jaws imply a geometric G around a luminous verified core; the full-bleed silhouette remains legible at favicon size.
+- App-icon constraints: original mark, no text or borrowed symbols, no surrounding mockup scene, graphite and ivory materials, and one restrained amber evidence seam. The supplied examples informed only the rounded 3D material and studio-lighting language.
 
 Skill application: ui-ux-pro-max guided the high-contrast, asymmetric system and accessibility checks. antislop and antislop-ui enforce purposeful visuals, real data, measured motion, and complete interaction states. The generated 3D asset follows the imagegen project-bound asset workflow. Requested impeccable, design-taste-frontend, and high-end-visual-design remain unavailable locally and are not claimed.

@@ -27,10 +27,12 @@ Updated: 2026-09-15. Owners: Codex + Claude Code (`gauntlet-claude`).
 - [x] Upgrade the public repository presentation with the Gauntlet brand mark, an optimized production dashboard capture, and an evidence-based "How IBM Bob 2.0 is used" section for submission reviewers.
 - [x] Harden CLI artifact integrity and strengthen lock cleanup: artifact reads now validate schema/counts/scores/path safety fail-closed, and every post-lock strengthen failure releases `.gauntlet/.lock` before its exit code is emitted.
 - [x] Complete the UI/UX audit pass: mobile navigation no longer clips, merge status moves next to the primary score, the reduced-motion 3D core has an explicit rendered state, important metadata meets readable contrast/type sizes, run labels are human-readable, survivors are action-led, and Compare prioritizes the real survivor reduction.
+- [x] Install IBM Bob Shell 2.0.3 and run a bounded headless readiness probe; the executable is verified, while live inference remains blocked by the missing `BOB_API_KEY`.
+- [x] Activate strict `main` branch protection with `gauntlet-gate` required for admins, then prove the policy on PR #1: CI blocked an 85.5% run and cleared the same PR after boundary tests raised the artifact score to 100%.
 
 ## Open constraints
 
-- IBM Bob executable is not currently on PATH; live Bob hook/headless integration needs actual installation and verified invocation. Do not represent a stub as verified IBM integration.
+- IBM Bob Shell 2.0.3 is installed on PATH, but headless execution requires a `BOB_API_KEY` that is not present on this machine. Live Bob hook/strengthen verification remains pending; do not attribute the recorded Stryker score delta to Bob yet.
 - User supplied origin https://github.com/Im-A-Nuel/gauntlet.git; read-only remote check found no existing refs. Working branch renamed to main as requested.
 - Requested UI skills `impeccable`, `design-taste-frontend`, and `high-end-visual-design` were not found in local Codex/Claude skill directories. Available requested skills: ui-ux-pro-max, antislop, antislop-ui.
 - Dashboard uses the cinematic monochrome verification-instrument direction in DESIGN.md and the supplied visual references.
@@ -54,7 +56,8 @@ Updated: 2026-09-15. Owners: Codex + Claude Code (`gauntlet-claude`).
 - Wordmark refinement: the local Manrope Variable face loads as the computed brand font in Playwright, while typecheck, four artifact tests, production build, both end-to-end suites, responsive overflow checks, and axe WCAG A/AA remain green.
 - Repository presentation: a production-mode dashboard capture was reviewed without development chrome, cropped to the product's primary evidence view, compressed from 598 KB PNG to 80 KB WebP, and every README image/document path resolves locally. The Bob section distinguishes strengthen verification and score reporting from the separate policy gate.
 - UI/UX audit hardening: production screenshots confirm the mutation core renders at 375 px with reduced motion, all four navigation targets remain in the viewport, mobile policy status appears before the core, and the Compare chart labels exact scores while emphasizing the recorded survivor change from 12 to 1. Typecheck, artifact tests, production build, both Playwright suites, responsive overflow checks, and axe WCAG A/AA pass.
+- GitHub enforcement: workflow job `gauntlet-gate` now reports on every PR, `main` requires that check with strict/admin enforcement, and public PR #1 records a failed 85.5% artifact followed by a passing 100% artifact after boundary assertions were added. Exact run links and Bob readiness evidence are in `docs/INTEGRATION_EVIDENCE.md`.
 
 ## Next checkpoint
 
-The audited cinematic dashboard is ready for review at `http://127.0.0.1:3000` after running `npm run dev` in `dashboard/`. The remaining product-level verification is a live Bob hook/headless flow on a machine with IBM Bob installed, followed by GitHub branch-protection configuration for the CI check.
+The audited cinematic dashboard and enforced GitHub gate are ready. The remaining product-level verification is to provide `BOB_API_KEY`, rerun the live Bob hook/headless strengthen flow, and append that live evidence to `docs/INTEGRATION_EVIDENCE.md`.

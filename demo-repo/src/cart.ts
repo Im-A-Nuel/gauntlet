@@ -15,7 +15,9 @@ export function isEmpty(items: CartItem[]): boolean {
 }
 
 export function cartSubtotal(items: CartItem[]): number {
-  return round2(items.reduce((sum, item) => sum + item.unitPrice * item.qty, 0));
+  return round2(
+    items.reduce((sum, item) => sum + item.unitPrice * item.qty, 0),
+  );
 }
 
 export function applyCoupon(subtotal: number, coupon?: Coupon): number {
@@ -28,9 +30,38 @@ export function applyCoupon(subtotal: number, coupon?: Coupon): number {
   return Math.max(0, round2(subtotal - coupon.value));
 }
 
+export function shippingFee(subtotal: number): number {
+  if (subtotal >= 500) {
+    return 0;
+  }
+  if (subtotal >= 400) {
+    return 0.99;
+  }
+  if (subtotal >= 300) {
+    return 1.49;
+  }
+  if (subtotal >= 200) {
+    return 1.99;
+  }
+  if (subtotal >= 150) {
+    return 2.49;
+  }
+  if (subtotal >= 100) {
+    return 2.99;
+  }
+  if (subtotal >= 50) {
+    return 4.99;
+  }
+  if (subtotal > 0) {
+    return 9.99;
+  }
+  return 0;
+}
+
 export function cartTotal(items: CartItem[], coupon?: Coupon): number {
   if (isEmpty(items)) {
     return 0;
   }
-  return applyCoupon(cartSubtotal(items), coupon);
+  const discountedSubtotal = applyCoupon(cartSubtotal(items), coupon);
+  return round2(discountedSubtotal + shippingFee(discountedSubtotal));
 }

@@ -50,6 +50,11 @@ describe("cartTotal", () => {
     expect(cartTotal([], { type: "percent", value: 50 })).toBe(0);
   });
   it("applies the coupon to a non-empty cart's subtotal", () => {
-    expect(cartTotal([{ unitPrice: 10, qty: 10 }], { type: "percent", value: 20 })).toBe(80);
+    expect(
+      cartTotal([{ unitPrice: 10, qty: 10 }], {
+        type: "percent",
+        value: 20,
+      }),
+    ).toBe(84.99);
   });
 });

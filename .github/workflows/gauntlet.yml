@@ -50,7 +50,7 @@ jobs:
           gauntlet --repo demo-repo run --changed --base-ref "$base" --test-command "npm run test:strong" --trigger ci
       - name: Enforce minimum test strength
         if: steps.scope.outputs.changed == 'true'
-        run: gauntlet --repo demo-repo gate --min-score 80
+        run: gauntlet --repo demo-repo gate --min-score 95
       - uses: actions/upload-artifact@v4
         if: always() && steps.scope.outputs.changed == 'true'
         with:

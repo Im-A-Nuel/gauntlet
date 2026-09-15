@@ -2,8 +2,6 @@ name: Mutation policy
 
 on:
   pull_request:
-    paths:
-      - 'demo-repo/src/**'
   workflow_dispatch:
 
 permissions:
@@ -11,6 +9,7 @@ permissions:
 
 jobs:
   trust:
+    name: gauntlet-gate
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -25,19 +24,35 @@ jobs:
           node-version: 24
           cache: npm
           cache-dependency-path: demo-repo/package-lock.json
-      - run: npm ci --prefix demo-repo
-      - run: go install ./cmd/gauntlet
-      - run: gauntlet --repo demo-repo init
+      - name: Detect changed demo source
+        id: scope
+        env:
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          base="${PR_BASE:-5b4762e}"
+          if git diff --quiet "$base" HEAD -- demo-repo/src; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.scope.outputs.changed == 'true'
+        run: npm ci --prefix demo-repo
+      - if: steps.scope.outputs.changed == 'true'
+        run: go install ./cmd/gauntlet
+      - if: steps.scope.outputs.changed == 'true'
+        run: gauntlet --repo demo-repo init
       - name: Mutate changed demo source
+        if: steps.scope.outputs.changed == 'true'
         env:
           PR_BASE: ${{ github.event.pull_request.base.sha }}
         run: |
           base="${PR_BASE:-5b4762e}"
           gauntlet --repo demo-repo run --changed --base-ref "$base" --test-command "npm run test:strong" --trigger ci
       - name: Enforce minimum test strength
+        if: steps.scope.outputs.changed == 'true'
         run: gauntlet --repo demo-repo gate --min-score 80
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && steps.scope.outputs.changed == 'true'
         with:
           name: gauntlet-run
           path: demo-repo/.gauntlet/runs/

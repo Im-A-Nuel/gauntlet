@@ -1,6 +1,6 @@
 # Demo Script, Pitch Deck & Submission Checklist
 
-Implementation note: the numerical results below are measured from the bundled Stryker 10 artifacts. The strong demo tests are manually authored and must not be attributed to a live IBM Bob session; that integration requires an installed Bob executable that was unavailable in this environment.
+Implementation note: the numerical results below now have two independent sources. The bundled Stryker 10 samples remain reproducible without Bob. A live Bob Shell 2.0.3 run also produced the same 74.5% to 97.9% result; PR #3 preserves Bob's test diff and both generated artifacts.
 
 ## Video Script (target 3:00)
 
@@ -17,12 +17,12 @@ Screen: dashboard overview, 100% line coverage next to Trust Score 74.5%, then t
 Line: "Line coverage is 100%, but Trust Score is only 74.5 and the merge policy fails. Twelve of 47 changes went unnoticed. Each survivor points to a behavior the assertions did not pin down."
 
 **1:30 to 2:15 — The loop.**
-Screen: `gauntlet strengthen --prepare-only`, the generated `survivors.md`, the additive strong-suite re-run, and Compare changing from 74.5% to 97.9%.
-Line: "Gauntlet turns survivors into a structured Bob Skill handoff. This machine does not have IBM Bob installed, so this recording uses the honest prepare-only path and a separately authored boundary suite. The same 47 mutants run again: 46 are killed, Trust Score reaches 97.9, and the original weak tests remain intact."
+Screen: the generated `survivors.md`, live `gauntlet strengthen` output, Bob's additive test diff, and Compare changing from 74.5% to 97.9%.
+Line: "Gauntlet sends twelve survivors to its Bob Skill. Bob adds precise boundary and exact-value assertions without touching source, then Gauntlet attacks the same 47 mutants again. Forty-six are killed, one survives, and Trust Score reaches 97.9%."
 
 **2:15 to 2:45 — The gate.**
 Screen: baseline gate returning exit 1, follow-up gate returning exit 0, then the GitHub workflow definition.
-Line: "The policy is executable: 74.5 fails at the 80 threshold; 97.9 passes. The included GitHub workflow publishes this as a check, and repository branch protection can make it merge-blocking."
+Line: "The policy is executable: 74.5 fails at the 80 threshold and 97.9 passes. The required GitHub check is active on main; PR #1 records a blocked revision and the passing revision after its tests were strengthened."
 
 **2:45 to 3:00 — Close.**
 Screen: logo and architecture strip: Bob Stop hook, Skill handoff, headless adapter, Stryker workers, artifact, dashboard, gate.
@@ -46,7 +46,7 @@ Line: "Gauntlet connects Bob's extension points to adversarial evidence: trigger
 - [ ] Working prototype accessible online (Vercel dashboard with sample runs + repo instructions for the CLI).
 - [ ] Video uploaded (public link), within length rules, MP4.
 - [ ] Pitch deck PDF.
-- [ ] Public GitHub repo, MIT license, README with "How IBM Bob 2.0 is used" section.
+- [x] Public GitHub repo, MIT license, README with "How IBM Bob 2.0 is used" section.
 - [ ] Project page: clear title, short/long descriptions within limits, correct tech/category tags, team details.
 - [ ] Submitted well before the deadline (manual submission after deadline requires prior organizer approval; do not rely on it).
 

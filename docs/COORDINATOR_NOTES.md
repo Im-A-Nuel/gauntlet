@@ -1,6 +1,6 @@
 # Integration closeout notes
 
-Reviewed by Codex on 2026-09-14 after the CLI/demo implementation and dependency upgrade were merged into `main`.
+Reviewed by Codex on 2026-09-15 after live Bob verification and GitHub branch protection were completed.
 
 ## Verified
 
@@ -11,6 +11,8 @@ Reviewed by Codex on 2026-09-14 after the CLI/demo implementation and dependency
 - Scope resolution handles deleted files, NUL-delimited unusual filenames, invalid base refs, and symlinks escaping the project.
 - Dashboard artifact parsing recomputes counts and scores, rejects malformed measurements, and never silently replaces a broken configured live directory with samples.
 - Dashboard unit tests, strict type generation/checking, production build, Playwright interaction/API tests, axe checks, and responsive overflow checks pass.
+- Bob Shell 2.0.3 completed a bounded live `gauntlet strengthen` run. It added tests only, and the automatic re-run improved the same 47-mutant scope from 74.5% to 97.9%. Evidence PR #3 preserves the generated artifacts and Bob-authored diff.
+- Branch protection on `main` requires the strict `gauntlet-gate` check for administrators. PR #1 records the controlled failing and passing proof.
 
 ## Remaining CLI hardening
 
@@ -23,8 +25,7 @@ Both items below are resolved as of this checkpoint (Claude Code session `gauntl
 
 ## Explicit limitations
 
-- IBM Bob is not installed in this environment. Hook firing, live `bob run`, automatic Skill activation, and agent-written test changes remain unverified. `strengthen --prepare-only` is the honest local demonstration path.
+- Automatic firing of Bob's configured `Stop` lifecycle hook was not separately observed. Its exact command was exercised directly and recorded with a `hook` trigger.
 - The existence-only lock has no PID/liveness recovery after a process crash.
 - Test-strength verification uses file hashes and `expect(` counts, not semantic assertion analysis.
 - `demo-repo` retains two moderate `qs` advisories in a transitive Stryker development-tool chain; dashboard dependencies have no reported vulnerabilities.
-- GitHub branch protection must be enabled by the repository owner for the mutation workflow to become a merge-blocking required check.

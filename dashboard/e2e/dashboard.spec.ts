@@ -65,6 +65,23 @@ test("recorded reports, inspection, filters, comparisons and mobile layout", asy
   ).toBeVisible();
   const cells = page.getByRole("button", { name: /mutant .* in .* line/ });
   expect(await cells.count()).toBeGreaterThan(0);
+  const matrixCards = page.locator(".matrix-file");
+  await expect(matrixCards).toHaveCount(2);
+  const [firstCard, secondCard] = await Promise.all([
+    matrixCards.nth(0).boundingBox(),
+    matrixCards.nth(1).boundingBox(),
+  ]);
+  expect(firstCard).not.toBeNull();
+  expect(secondCard).not.toBeNull();
+  expect(
+    secondCard!.y - (firstCard!.y + firstCard!.height),
+  ).toBeGreaterThanOrEqual(10);
+  expect(
+    await matrixCards.first().evaluate((card) => ({
+      radius: getComputedStyle(card).borderRadius,
+      paddingLeft: getComputedStyle(card).paddingLeft,
+    })),
+  ).toEqual({ radius: "10px", paddingLeft: "24px" });
   await cells.first().click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");

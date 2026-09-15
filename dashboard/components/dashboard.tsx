@@ -118,7 +118,9 @@ function MutationStrip({
   onSelect: (m: LocatedMutant) => void;
 }) {
   return (
-    <div className="mutation-strip">
+    <div
+      className={`mutation-strip${mutants.length >= 24 ? " mutation-strip-dense" : ""}`}
+    >
       {mutants.map((m) => (
         <button
           key={`${m.path}:${m.id}`}

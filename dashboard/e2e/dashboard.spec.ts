@@ -36,6 +36,9 @@ test("recorded reports, inspection, filters, comparisons and mobile layout", asy
     .locator("option")
     .allTextContents();
   expect(runOptions.length).toBeGreaterThanOrEqual(2);
+  expect(runOptions.every((option) => !/\d{13}-[a-f0-9]{7}/.test(option))).toBe(
+    true,
+  );
   await page.screenshot({
     path: "../artifacts/qa/overview-desktop.png",
     fullPage: true,
@@ -116,9 +119,29 @@ test("recorded reports, inspection, filters, comparisons and mobile layout", asy
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await expect(page.getByRole("main")).toBeVisible();
-  await page
-    .locator(".core-image img")
-    .evaluate((image: HTMLImageElement) => image.decode());
+  const mobileCore = page.locator(".core-image img");
+  await mobileCore.evaluate((image: HTMLImageElement) => image.decode());
+  await expect(mobileCore).toBeVisible();
+  const mobileCoreState = await mobileCore.evaluate(
+    (image: HTMLImageElement) => ({
+      loaded: image.naturalWidth > 0,
+      opacity: getComputedStyle(image.parentElement!).opacity,
+      visibility: getComputedStyle(image.parentElement!).visibility,
+      filter: getComputedStyle(image.parentElement!).filter,
+    }),
+  );
+  expect(mobileCoreState).toEqual({
+    loaded: true,
+    opacity: "1",
+    visibility: "visible",
+    filter: "none",
+  });
+  const navigation = page.getByRole("navigation", { name: "Report views" });
+  await expect(navigation.getByRole("link")).toHaveCount(4);
+  for (const link of await navigation.getByRole("link").all()) {
+    await expect(link).toBeInViewport();
+  }
+  await expect(page.getByText(/Clears the 80% merge threshold/)).toBeVisible();
   await page.screenshot({
     path: "../artifacts/qa/overview-mobile.png",
     fullPage: true,

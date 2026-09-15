@@ -17,6 +17,8 @@ The page answers one question: which changed behavior is insufficiently tested, 
 - Hover and focus states use edge light and contrast, not scale-heavy movement. Reduced-motion users receive the complete final state without animation or parallax.
 - Navigation, selectors, table rows, filters, dialogs, copy feedback, loading, empty, and error states keep their native semantics and existing behavior.
 - Targets are at least 44px, focus is visible, tables reflow or scroll safely, and the layout has explicit 390px, 760px, 1100px, and wide-screen behavior.
+- On phones, all four report views remain visible in one compact grid, the merge-policy result sits beside the primary score, and the mutation core is capped at 300px so evidence precedes spectacle. Reduced-motion mode explicitly renders the final core, chamber, score trace, and policy state.
+- Run selectors lead with trigger, score, and recorded time; raw artifact IDs remain technical detail. Compare leads with score delta and the survivor-count change, with exact scores labelled on the bars instead of repeated as a separate sentence.
 
 ## Data integrity
 

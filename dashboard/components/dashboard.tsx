@@ -9,6 +9,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  LabelList,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -40,6 +41,25 @@ const stamp = (date: string) =>
     timeZone: "UTC",
   }).format(new Date(date)) + " UTC";
 const shortId = (run: Run) => run.runId;
+const runOptionLabel = (run: Run) => {
+  const recorded = new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+    timeZone: "UTC",
+  }).format(new Date(run.createdAt));
+  const trigger =
+    run.trigger === "ci"
+      ? "CI"
+      : run.trigger === "strengthen"
+        ? "Strengthened"
+        : run.trigger === "hook"
+          ? "Hook"
+          : "Manual";
+  return `${trigger} · ${formatScore(run.totals.trustScore)}% · ${recorded} UTC`;
+};
 const duration = (ms: number) =>
   ms < 60000
     ? `${(ms / 1000).toFixed(1)}s`
@@ -262,7 +282,7 @@ function MutationCore({ run }: { run: Run }) {
           src="/visuals/mutation-core.webp"
           alt=""
           fill
-          priority
+          preload
           sizes="(max-width: 760px) 90vw, (max-width: 1100px) 50vw, 520px"
         />
       </div>
@@ -320,11 +340,13 @@ export function Dashboard({
         .toLowerCase()
         .includes(query.toLowerCase()),
   );
-  const survivorList = survivors.filter((m) =>
-    `${m.path} ${m.mutator} ${m.id}`
-      .toLowerCase()
-      .includes(query.toLowerCase()),
-  );
+  const survivorList = survivors
+    .filter((m) =>
+      `${m.path} ${m.mutator} ${m.id}`
+        .toLowerCase()
+        .includes(query.toLowerCase()),
+    )
+    .sort((a, b) => a.path.localeCompare(b.path) || a.line - b.line);
   useEffect(() => {
     setRefreshing(false);
   }, [runs, initialError]);
@@ -441,8 +463,8 @@ export function Dashboard({
                   }
                 >
                   {runs.map((r) => (
-                    <option key={r.runId} value={r.runId}>
-                      {shortId(r)} · {formatScore(r.totals.trustScore)}%
+                    <option key={r.runId} value={r.runId} title={r.runId}>
+                      {runOptionLabel(r)}
                     </option>
                   ))}
                 </select>
@@ -488,6 +510,16 @@ export function Dashboard({
                       scored mutants <span>·</span> {run.totals.noCoverage}{" "}
                       without coverage
                     </p>
+                    <div className="mobile-policy-summary">
+                      <Outcome run={run} />
+                      <span>
+                        {verdict(run) === "pass"
+                          ? `Clears the ${run.threshold}% merge threshold`
+                          : verdict(run) === "fail"
+                            ? `Below the ${run.threshold}% merge threshold`
+                            : "No scored mutations to evaluate"}
+                      </span>
+                    </div>
                   </div>
                   <MutationCore run={run} />
                   <aside className="verdict-panel">
@@ -640,10 +672,14 @@ export function Dashboard({
               <>
                 <div className="view-heading">
                   <p className="eyebrow">Uncaught changes</p>
-                  <h1>{survivors.length} reasons to look closer.</h1>
+                  <h1>
+                    {survivors.length === 1
+                      ? "1 behavior gap remains."
+                      : `${survivors.length} behavior gaps remain.`}
+                  </h1>
                   <p>
-                    These mutations left the tests green. Each one is a concrete
-                    place to improve an assertion.
+                    Ordered by source location. Open a mutation to see the exact
+                    behavior the current assertions missed.
                   </p>
                 </div>
                 <div className="filter-bar">
@@ -731,7 +767,7 @@ export function Dashboard({
                     >
                       {runs.map((r) => (
                         <option key={r.runId} value={r.runId}>
-                          {r.runId} · {formatScore(r.totals.trustScore)}%
+                          {runOptionLabel(r)}
                         </option>
                       ))}
                     </select>
@@ -745,7 +781,7 @@ export function Dashboard({
                     >
                       {runs.map((r) => (
                         <option key={r.runId} value={r.runId}>
-                          {r.runId} · {formatScore(r.totals.trustScore)}%
+                          {runOptionLabel(r)}
                         </option>
                       ))}
                     </select>
@@ -878,10 +914,13 @@ function Comparison({ a, b }: { a: Run; b: Run }) {
               : `${delta > 0 ? "+" : ""}${delta.toFixed(1)}`}
             <span>pts</span>
           </div>
-          <p>
-            {formatScore(a.totals.trustScore)}% →{" "}
-            {formatScore(b.totals.trustScore)}%
-          </p>
+          <div className="survivor-shift">
+            <span>Surviving mutations</span>
+            <strong>
+              {a.totals.survived} <span aria-hidden="true">→</span>{" "}
+              {b.totals.survived}
+            </strong>
+          </div>
           <Outcome run={b} />
         </div>
         <div
@@ -893,7 +932,7 @@ function Comparison({ a, b }: { a: Run; b: Run }) {
             <BarChart
               data={series}
               layout="vertical"
-              margin={{ left: 12, right: 30 }}
+              margin={{ left: 12, right: 52 }}
             >
               <CartesianGrid stroke="var(--border)" horizontal={false} />
               <XAxis
@@ -925,7 +964,15 @@ function Comparison({ a, b }: { a: Run; b: Run }) {
                 fill="var(--accent)"
                 barSize={28}
                 isAnimationActive={false}
-              />
+              >
+                <LabelList
+                  dataKey="score"
+                  position="right"
+                  fill="var(--text)"
+                  fontSize={12}
+                  formatter={(value) => `${value}%`}
+                />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -946,8 +993,8 @@ function Comparison({ a, b }: { a: Run; b: Run }) {
         ))}
       </div>
       <p className="fine-print">
-        {a.totals.survived} → {b.totals.survived} surviving mutations. Both
-        results are recorded artifacts; this view does not invoke an AI agent.
+        Both results are recorded artifacts; this view does not invoke an AI
+        agent.
       </p>
     </>
   );

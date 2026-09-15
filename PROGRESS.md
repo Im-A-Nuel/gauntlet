@@ -1,6 +1,6 @@
 # Gauntlet build progress
 
-Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
+Updated: 2026-09-15. Owners: Codex + Claude Code (`gauntlet-claude`).
 
 ## Working agreement
 
@@ -26,6 +26,7 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - [x] Refine the Gauntlet wordmark with a dedicated locally bundled variable typeface, optical spacing, and stable icon/text alignment while retaining IBM Plex for product UI and technical data.
 - [x] Upgrade the public repository presentation with the Gauntlet brand mark, an optimized production dashboard capture, and an evidence-based "How IBM Bob 2.0 is used" section for submission reviewers.
 - [x] Harden CLI artifact integrity and strengthen lock cleanup: artifact reads now validate schema/counts/scores/path safety fail-closed, and every post-lock strengthen failure releases `.gauntlet/.lock` before its exit code is emitted.
+- [x] Complete the UI/UX audit pass: mobile navigation no longer clips, merge status moves next to the primary score, the reduced-motion 3D core has an explicit rendered state, important metadata meets readable contrast/type sizes, run labels are human-readable, survivors are action-led, and Compare prioritizes the real survivor reduction.
 
 ## Open constraints
 
@@ -52,7 +53,8 @@ Updated: 2026-09-14. Owners: Codex + Claude Code (`gauntlet-claude`).
 - App-icon integration: Next.js type generation/typecheck, four artifact tests, production build, and both Playwright suites pass. The build exposes `/icon.png`, `/apple-icon.png`, and `/manifest.webmanifest`; automated desktop/mobile QA also confirms the branded header mark, metadata links, no page errors, no horizontal overflow, and no axe WCAG A/AA violations.
 - Wordmark refinement: the local Manrope Variable face loads as the computed brand font in Playwright, while typecheck, four artifact tests, production build, both end-to-end suites, responsive overflow checks, and axe WCAG A/AA remain green.
 - Repository presentation: a production-mode dashboard capture was reviewed without development chrome, cropped to the product's primary evidence view, compressed from 598 KB PNG to 80 KB WebP, and every README image/document path resolves locally. The Bob section distinguishes strengthen verification and score reporting from the separate policy gate.
+- UI/UX audit hardening: production screenshots confirm the mutation core renders at 375 px with reduced motion, all four navigation targets remain in the viewport, mobile policy status appears before the core, and the Compare chart labels exact scores while emphasizing the recorded survivor change from 12 to 1. Typecheck, artifact tests, production build, both Playwright suites, responsive overflow checks, and axe WCAG A/AA pass.
 
 ## Next checkpoint
 
-The cinematic dashboard implementation is ready for review at `http://127.0.0.1:3000` after running `npm run dev` in `dashboard/`. The remaining product-level verification is a live Bob hook/headless flow on a machine with IBM Bob installed, followed by GitHub branch-protection configuration for the CI check.
+The audited cinematic dashboard is ready for review at `http://127.0.0.1:3000` after running `npm run dev` in `dashboard/`. The remaining product-level verification is a live Bob hook/headless flow on a machine with IBM Bob installed, followed by GitHub branch-protection configuration for the CI check.

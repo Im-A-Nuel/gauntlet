@@ -64,7 +64,7 @@ Gauntlet connects three Bob extension points to the mutation loop:
 2. Surviving mutations are written to `.gauntlet/survivors.md`, which gives the bundled `strengthen-tests` Skill exact files, lines, operators, and behavior gaps to address.
 3. `gauntlet strengthen` can invoke a configured non-interactive Bob command, verify the resulting file changes, rerun mutation testing, and report a comparable before/after score. `gauntlet gate` separately enforces the configured merge threshold against the stored run.
 
-Bob is not bundled. The actual IBM executable was unavailable on the development machine, so live agent execution remains a separate verification step. `strengthen --prepare-only` demonstrates the handoff without claiming that Bob ran.
+Bob is not bundled and requires a local IBM subscription plus API key. The live integration was verified with Bob Shell 2.0.3: the scoped hook run scored 74.5%, Bob added 12 tests from the survivor handoff, and `gauntlet strengthen` automatically reran the same 47 mutants at 97.9%. The Bob-authored diff and generated artifacts are preserved in [evidence PR #3](https://github.com/Im-A-Nuel/gauntlet/pull/3); exact task IDs, costs, hashes, and verification limits are recorded in [docs/INTEGRATION_EVIDENCE.md](docs/INTEGRATION_EVIDENCE.md).
 
 Official references: [Bob lifecycle hooks](https://bob.ibm.com/docs/ide/configuration/lifecycle-hooks), [Bob non-interactive sessions](https://bob.ibm.com/docs/shell/getting-started/start-bobshell-non-interactive), [Stryker configuration](https://stryker-mutator.io/docs/stryker-js/configuration/).
 
@@ -81,6 +81,6 @@ npx playwright test
 
 Implementation status and integration results are maintained in [PROGRESS.md](PROGRESS.md). Shared interfaces are in [docs/SCHEMA.md](docs/SCHEMA.md); dependencies are recorded in [docs/DEPENDENCIES.md](docs/DEPENDENCIES.md). Dashboard framework was updated from the early Next.js 14 plan to supported Next.js 16.
 
-Known limits: live IBM Bob execution has not been verified on this machine; `strengthen --prepare-only` is the honest handoff-only path. Two moderate advisories remain in Stryker's development-only transitive dependency chain. Dashboard dependencies audit clean.
+Known limits: automatic firing of Bob's configured `Stop` lifecycle hook was not separately observed; its exact command was verified directly with a `hook` trigger. Test-strength verification uses file hashes and assertion counts, not full semantic analysis. Two moderate advisories remain in Stryker's development-only transitive dependency chain. Dashboard dependencies audit clean.
 
 MIT © Im-A-Nuel.
